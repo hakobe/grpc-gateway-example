@@ -1,0 +1,38 @@
+syntax = "proto3";
+package articles;
+
+import "google/protobuf/empty.proto";
+import "google/protobuf/timestamp.proto";
+import "google/api/annotations.proto";
+
+message Article {
+    string title = 1;
+    string body = 2;
+    google.protobuf.Timestamp created = 3;
+}
+
+message PostRequest {
+    Article article = 1;
+}
+
+message PostResponse {
+    Article article = 1;
+}
+
+message RecentResponse {
+    repeated Article articles = 1;
+}
+
+service ArticlesService {
+    rpc Post(PostRequest) returns (PostResponse) {
+        option (google.api.http) = {
+            post: "/articles/post"
+            body: "*"
+        };
+    };
+    rpc Recent(google.protobuf.Empty) returns (RecentResponse) {
+        option (google.api.http) = {
+            get: "/articles/recent"
+        };
+    };
+}
